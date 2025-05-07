@@ -27,12 +27,36 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title:"Enpower",
       home: Scaffold(
-        appBar: AppBar(title: Text('Discord OAuth with Supabase')),
         body: Center(
-          child: ElevatedButton(
-            onPressed: signInWithDiscord,
-            child: Text('Sign in with Discord'),
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  const Color.fromARGB(255, 231, 231, 231),
+              foregroundColor: Colors.black,
+              shape: const StadiumBorder(),
+              elevation: 0, // Shadow elevation
+              shadowColor: const Color.fromARGB(
+                  255, 255, 255, 255), // Shadow color
+            ),
+            onPressed: () {
+              try {
+                signInWithDiscord();
+              } catch (e) {
+                print(e);
+              }
+            },
+            icon: const ImageIcon(
+              size:30,
+              AssetImage("assets/images/discord.png"),
+              color: Color.fromARGB(255, 22, 22, 22),
+            ),
+            label: const Text('Discordでログイン',
+                style: (TextStyle(
+                    color: Color.fromARGB(255, 22, 22, 22),
+                    fontSize: 16))),
           ),
         ),
       ),
