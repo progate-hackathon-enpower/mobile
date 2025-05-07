@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
+import 'package:uni_links/uni_links.dart';
 
 void main() async {
   await dotenv.load();
@@ -12,16 +13,35 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final SupabaseClient supabase = Supabase.instance.client;
 
+  @override
+  void initState() {
+    super.initState();
+    _handleIncomingLinks();
+  }
+
+  void _handleIncomingLinks() {
+    uriLinkStream.listen((Uri? uri) {
+      if (uri != null && uri.scheme == "enpower") {
+        print("Received OAuth callback: ${uri.toString()}");
+      }
+    });
+  }
+
   Future<void> signInWithDiscord() async {
-    final authUrl = await supabase.auth.getOAuthSignInUrl(provider: OAuthProvider.discord);
-    if (await canLaunch(authUrl.url)) {
-      await launch(authUrl.url);
-    } else {
-      throw 'Could not launch ${authUrl.url}';
-    }
+    await supabase.auth.signInWithOAuth(
+    OAuthProvider.discord,
+    redirectTo: kIsWeb ? null : 'enpower://auth', // Optionally set the redirect link to bring back the user via deeplink.
+    authScreenLaunchMode:
+        kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication, // Launch the auth screen in a new webview on mobile.
+  );
   }
 
   @override
