@@ -58,17 +58,21 @@ class _HomePageState extends State<HomePage> {
         final String? code = uri.queryParameters['code'];
         print(code);
         if (code != null) {
-          final session = Supabase.instance.client.auth.currentSession;
-          print(session);
-          if (session != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
-            );
-          } else {
-            print("Failed to authenticate user.");
+          try{
+            final res = await Supabase.instance.client.auth.getSessionFromUrl(uri);
+            
+            print(res.session);
+            if (!res.session.isExpired) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
+              );
+            } else {
+              print("Failed to authenticate user.");
+            }
+          } catch (e) {
+            print("Error during authentication: $e");
           }
-
         }
       }
     });
