@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:uni_links/uni_links.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
   await Supabase.initialize(
     url: dotenv.env["supabase_url"]!,
@@ -41,29 +41,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool logined = false;
   final SupabaseClient supabase = Supabase.instance.client;
 
   @override
   void initState() {
     super.initState();
     _handleIncomingLinks();
-
-    final session = Supabase.instance.client.auth.currentSession;
-    if (session != null) {
-      print("Session exists: ${session.accessToken}");
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
-      );});
-    } else {
-      print("No session found.");
-    }
   }
 
   void _handleIncomingLinks() {
     uriLinkStream.listen((Uri? uri)async {
-      if (uri != null && uri.scheme == "enpower") {
+      if (uri != null && uri.scheme == "enpower" && !logined) {
+        logined = true;
         print("Received OAuth callback: ${uri.toString()}");
         final String? code = uri.queryParameters['code'];
         print(code);
@@ -95,36 +85,46 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final session = Supabase.instance.client.auth.currentSession;
+    if (session != null && !logined) {
+      logined = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
+      );});
+    }
+
     return Scaffold(
-        body: Center(
-          child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  const Color.fromARGB(255, 231, 231, 231),
-              foregroundColor: Colors.black,
-              shape: const StadiumBorder(),
-              elevation: 0, // Shadow elevation
-              shadowColor: const Color.fromARGB(
-                  255, 255, 255, 255), // Shadow color
-            ),
-            onPressed: () {
-              try {
-                signInWithDiscord();
-              } catch (e) {
-                print(e);
-              }
-            },
-            icon: const ImageIcon(
-              size:30,
-              AssetImage("assets/images/discord.png"),
-              color: Color.fromARGB(255, 22, 22, 22),
-            ),
-            label: const Text('Discordでログイン',
-                style: (TextStyle(
-                    color: Color.fromARGB(255, 22, 22, 22),
-                    fontSize: 16))),
+      body: Center(
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor:
+                const Color.fromARGB(255, 231, 231, 231),
+            foregroundColor: Colors.black,
+            shape: const StadiumBorder(),
+            elevation: 0, // Shadow elevation
+            shadowColor: const Color.fromARGB(
+                255, 255, 255, 255), // Shadow color
           ),
+          onPressed: () {
+            try {
+              signInWithDiscord();
+            } catch (e) {
+              print(e);
+            }
+          },
+          icon: const ImageIcon(
+            size:30,
+            AssetImage("assets/images/discord.png"),
+            color: Color.fromARGB(255, 22, 22, 22),
+          ),
+          label: const Text('Discordでログイン',
+              style: (TextStyle(
+                  color: Color.fromARGB(255, 22, 22, 22),
+                  fontSize: 16))),
         ),
-      );
+      ),
+    );
   }
 }
