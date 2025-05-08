@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _handleIncomingLinks();
+    if (!kIsWeb) _handleIncomingLinks();
   }
 
   void _handleIncomingLinks() {
