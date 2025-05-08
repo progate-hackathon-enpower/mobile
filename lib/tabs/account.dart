@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class tabsAccount extends StatefulWidget {
@@ -21,6 +22,8 @@ class _tabsAccountState extends State<tabsAccount> {
   @override
   Widget build(BuildContext context) {
     final session = Supabase.instance.client.auth.currentSession!;
+    final SupabaseClient supabase = Supabase.instance.client;
+    
     print(session.user.userMetadata);
     print(session.user.userMetadata?["custom_claims"]["global_name"]);
     return WillPopScope(
@@ -59,6 +62,32 @@ class _tabsAccountState extends State<tabsAccount> {
                             fontWeight: FontWeight.bold,
                           )
                         ),
+                      ),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 231, 231, 231),
+                          foregroundColor: Colors.black,
+                          shape: const StadiumBorder(),
+                          elevation: 0, // Shadow elevation
+                          shadowColor: const Color.fromARGB(
+                              255, 255, 255, 255), // Shadow color
+                        ),
+                        onPressed: () {
+                          try {
+                            supabase.auth.signOut();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const MyApp()),
+                            );
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                        label: const Text('ログアウト',
+                            style: (TextStyle(
+                                color: Color.fromARGB(255, 22, 22, 22),
+                                fontSize: 16))),
                       ),
                     ],
                   )
