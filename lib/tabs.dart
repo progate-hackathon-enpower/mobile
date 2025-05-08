@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/tabs/account.dart';
+import 'package:mobile/tabs/home.dart';
 
 class PageViewTabsScreen extends StatefulWidget {
   @override
@@ -47,10 +49,10 @@ class TabsScreen extends State<PageViewTabsScreen> {
         backgroundColor: const Color.fromARGB(255, 40, 40, 40),
       ),
       body: IndexedStack(
-        key:GlobalKey(),
         index:selectedIndex,
         children:[
-          Center()
+          tabsHome(),
+          tabsAccount()
         ]
       ),
     );
