@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class tabsAccount extends StatefulWidget {
   const tabsAccount({Key? key}) : super(key: key);
@@ -19,10 +20,12 @@ class _tabsAccountState extends State<tabsAccount> {
 
   @override
   Widget build(BuildContext context) {
+    final session = Supabase.instance.client.auth.currentSession!;
+    print(session.user.userMetadata);
+    print(session.user.userMetadata?["custom_claims"]["global_name"]);
     return WillPopScope(
       onWillPop: () async => false,
-        child: 
-            Scaffold(
+        child: Scaffold(
               appBar: AppBar(
                 centerTitle: false,
                 automaticallyImplyLeading: false,
@@ -37,11 +40,29 @@ class _tabsAccountState extends State<tabsAccount> {
                 ),
                 backgroundColor: const Color.fromARGB(255, 40, 40, 40),
               ),
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  
-                ],
+              body: Center(
+                child:Container(
+                  padding: const EdgeInsets.all(30),
+                  child:Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect( // アイコン表示（角丸）
+                        borderRadius: BorderRadius.circular(200),
+                        child: Image.network(session.user.userMetadata?["avatar_url"]),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 10),
+                        child:Text(
+                          session.user.userMetadata?["custom_claims"]["global_name"], 
+                          style: const TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          )
+                        ),
+                      ),
+                    ],
+                  )
+                )
               )
             ),
     );
