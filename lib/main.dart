@@ -103,11 +103,20 @@ class _HomePageState extends State<HomePage> {
     final session = Supabase.instance.client.auth.currentSession;
     if (session != null && !logined) {
       logined = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
-      );});
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final bool exist = await checkUserExists(session.user.userMetadata?["provider_id"]);
+        if(exist){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
+          );
+        }else{
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => newUserPage()),
+          );
+        }
+      });
     }
 
     return Scaffold(
