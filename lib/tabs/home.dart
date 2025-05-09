@@ -21,74 +21,82 @@ class _tabsHomeState extends State<tabsHome>{
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-        child: Scaffold(
-              appBar: AppBar(
-                centerTitle: false,
-                automaticallyImplyLeading: false,
-                title: const Text(
-                  'ホーム',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )
-                ),
-                titleTextStyle: const TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255), fontSize: 20
-                ),
-                backgroundColor: const Color.fromARGB(255, 40, 40, 40),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: (){
-                  showModalBottomSheet(
-                    scrollControlDisabledMaxHeightRatio: 1,
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          title: const Text(
+            'ホーム',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            )
+          ),
+          titleTextStyle: const TextStyle(
+            color: Color.fromARGB(255, 255, 255, 255), fontSize: 20
+          ),
+          backgroundColor: const Color.fromARGB(255, 40, 40, 40),
+        ),
+        floatingActionButton: FloatingActionButton(
+          heroTag: "add_button",
+          onPressed: (){
+            showModalBottomSheet(
+              scrollControlDisabledMaxHeightRatio: 1,
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      ),
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.9,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.close)
+                              )
                             ),
-                          ),
-                          height: MediaQuery.of(context).size.height * 0.9,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Column(children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: const Icon(Icons.close)
-                                    )
-                                  ),
-                                ],
-                              ),
-                            ]
-                          )
-                        )
-                      );
-                    },
-                  );
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(128), //角の丸み
-                ),
-                child: const Icon(
-                  Icons.add,
-                  color: Color.fromARGB(200, 255, 255, 255),
-                ),
-              ),
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  
-                ],
-              )
-            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Text(
+                                '活動を記録する',
+                                style:TextStyle(fontSize: 16)
+                              )
+                            ),
+                          ],
+                        ),
+                      ]
+                    )
+                  )
+                );
+              },
+            );
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(128), //角の丸み
+          ),
+          child: const Icon(
+            Icons.add,
+            color: Color.fromARGB(200, 255, 255, 255),
+          ),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            
+          ],
+        )
+      ),
     );
   }
 }
