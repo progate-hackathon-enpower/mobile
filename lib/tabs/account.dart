@@ -29,8 +29,8 @@ class _tabsAccountState extends State<tabsAccount> {
       );
     }
 
-    print(session.user.userMetadata);
-    print(session.user.userMetadata?["custom_claims"]["global_name"]);
+    // print(session.user.userMetadata);
+    // print(session.user.userMetadata?["custom_claims"]["global_name"]);
     return WillPopScope(
       onWillPop: () async => false,
         child: Scaffold(

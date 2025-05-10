@@ -33,7 +33,7 @@ class _newUserPageState extends State<newUserPage> {
     }
     if(displayName.isEmpty) displayName = session?.user.userMetadata?["custom_claims"]["global_name"];
 
-    print(session?.user.userMetadata);
+    // print(session?.user.userMetadata);
     return WillPopScope(
       onWillPop: () async => false,
         child: Scaffold(
