@@ -21,21 +21,26 @@ class _newUserPageState extends State<newUserPage> {
   }
 
   bool editName = false;
-  final session = Supabase.instance.client.auth.currentSession!;
+  final session = Supabase.instance.client.auth.currentSession;
   final SupabaseClient supabase = Supabase.instance.client;
   String displayName = "";
   @override
   Widget build(BuildContext context) {
-    if(displayName.isEmpty) displayName = session.user.userMetadata?["custom_claims"]["global_name"];
+    if (session == null) {
+      return const Center(
+        child: Text("アカウントの情報を取得できませんでした"),
+      );
+    }
+    if(displayName.isEmpty) displayName = session?.user.userMetadata?["custom_claims"]["global_name"];
 
-    print(session.user.userMetadata);
+    print(session?.user.userMetadata);
     return WillPopScope(
       onWillPop: () async => false,
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
           heroTag: "next_button",
           onPressed: ()async{
-            await newUser(session.user.userMetadata?["provider_id"], displayName, session.user.userMetadata?["avatar_url"], null);
+            await newUser(session?.user.userMetadata?["provider_id"], displayName, session?.user.userMetadata?["avatar_url"], null);
             Navigator.push(context,
               MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
             );
@@ -76,7 +81,7 @@ class _newUserPageState extends State<newUserPage> {
                 children: [
                   ClipRRect( // アイコン表示（角丸）
                     borderRadius: BorderRadius.circular(200),
-                    child: Image.network(session.user.userMetadata?["avatar_url"]),
+                    child: Image.network(session?.user.userMetadata?["avatar_url"]),
                   ),
                   Container(
                     padding: const EdgeInsets.only(top: 10),
