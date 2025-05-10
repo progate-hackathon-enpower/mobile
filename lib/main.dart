@@ -58,7 +58,6 @@ class _HomePageState extends State<HomePage> {
         logined = true;
         print("Received OAuth callback: ${uri.toString()}");
         final String? code = uri.queryParameters['code'];
-        print(code);
         if (code != null) {
           try{
             final res = await Supabase.instance.client.auth.getSessionFromUrl(uri);

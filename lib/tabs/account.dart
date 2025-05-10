@@ -21,11 +21,16 @@ class _tabsAccountState extends State<tabsAccount> {
 
   @override
   Widget build(BuildContext context) {
-    final session = Supabase.instance.client.auth.currentSession!;
+    final session = Supabase.instance.client.auth.currentSession;
     final SupabaseClient supabase = Supabase.instance.client;
-    
-    print(session.user.userMetadata);
-    print(session.user.userMetadata?["custom_claims"]["global_name"]);
+    if (session == null) {
+      return const Center(
+        child: Text("アカウントの情報を取得できませんでした"),
+      );
+    }
+
+    // print(session.user.userMetadata);
+    // print(session.user.userMetadata?["custom_claims"]["global_name"]);
     return WillPopScope(
       onWillPop: () async => false,
         child: Scaffold(
