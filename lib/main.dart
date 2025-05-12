@@ -58,43 +58,42 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb) _handleIncomingLinks();
-  }
-
-  void _handleIncomingLinks() {
-    uriLinkStream.listen((Uri? uri)async {
-      if (uri != null && uri.scheme == "enpower" && !logined) {
-        logined = true;
-        // print("Received OAuth callback: ${uri.toString()}");
-        final String? code = uri.queryParameters['code'];
-        if (code != null) {
-          try{
-            final res = await Supabase.instance.client.auth.getSessionFromUrl(uri);
-            
-            // print(res.session);
-            if (!res.session.isExpired) {
-              final bool exist = await checkUserExists(res.session.user.userMetadata?["provider_id"]);
-              if(exist){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
-                );
-              }else{
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => newUserPage()),
-                );
+    if (!kIsWeb){ 
+      uriLinkStream.listen((Uri? uri)async {
+        if (uri != null && uri.scheme == "enpower" && !logined) {
+          logined = true;
+          // print("Received OAuth callback: ${uri.toString()}");
+          final String? code = uri.queryParameters['code'];
+          if (code != null) {
+            try{
+              final res = await Supabase.instance.client.auth.getSessionFromUrl(uri);
+              // print(res.session);
+              if (!res.session.isExpired) {
+                final bool exist = await checkUserExists(res.session.user.userMetadata?["provider_id"]);
+                if(exist){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
+                  );
+                }else{
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => newUserPage()),
+                  );
+                }
+              } else {
+                // print("Failed to authenticate user.");
               }
-
-            } else {
-              // print("Failed to authenticate user.");
+            } catch (e) {
+              // print("Error during authentication: $e");
             }
-          } catch (e) {
-            // print("Error during authentication: $e");
           }
         }
-      }
     });
+  
+  }
+
+  
   }
 
   Future<void> signInWithDiscord() async {
