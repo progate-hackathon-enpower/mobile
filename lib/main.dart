@@ -10,15 +10,24 @@ import 'package:uni_links/uni_links.dart';
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load();
-  await Supabase.initialize(
-    url: dotenv.env["supabase_url"]!,
-    anonKey: dotenv.env["anon_key"]!,
-  );
-  runApp(MyApp());
+  final baseUrl = dotenv.env["supabase_url"];
+  final anonKey = dotenv.env["anon_key"];
+  if(baseUrl != null && anonKey != null){
+    await Supabase.initialize(
+      url: baseUrl,
+      anonKey: anonKey,
+    );
+  }else{
+    runApp(MyApp(failed:true));
+    return;
+  }
+
+  runApp(MyApp(failed:false));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool failed;
+  const MyApp({Key? key,required this.failed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +39,7 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromARGB(255, 22, 22, 22)),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: failed ? Center(child:Text("初期化に失敗しました。")) : const HomePage(),
     );
   }
 }

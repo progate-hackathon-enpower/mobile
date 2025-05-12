@@ -83,7 +83,7 @@ class _tabsAccountState extends State<tabsAccount> {
                             supabase.auth.signOut();
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const MyApp()),
+                              MaterialPageRoute(builder: (context) => const MyApp(failed: false,)),
                             );
                           } catch (e) {
                             // print(e);
