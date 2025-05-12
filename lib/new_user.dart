@@ -99,7 +99,7 @@ class _newUserPageState extends State<newUserPage> {
                       ]
                     ): TextField(
                       onTapOutside: (_) {
-                        print(displayName);
+                        // print(displayName);
                         FocusScope.of(context).unfocus();
                         setState(() {editName = !editName;});
                       },
