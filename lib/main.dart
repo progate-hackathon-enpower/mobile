@@ -9,17 +9,31 @@ import 'package:uni_links/uni_links.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
-  final baseUrl = dotenv.env["supabase_url"];
-  final anonKey = dotenv.env["anon_key"];
-  if(baseUrl != null && anonKey != null){
-    await Supabase.initialize(
-      url: baseUrl,
-      anonKey: anonKey,
-    );
+  if(kIsWeb){
+    final baseUrl = String.fromEnvironment("SUPABASE_URL");
+    final anonKey = String.fromEnvironment("SUPABASE_ANON_KEY");
+    if(baseUrl.isNotEmpty && anonKey.isNotEmpty){
+      await Supabase.initialize(
+        url: baseUrl,
+        anonKey: anonKey,
+      );
+    }else{
+      runApp(MyApp(failed:true));
+      return;
+    }
   }else{
-    runApp(MyApp(failed:true));
-    return;
+    await dotenv.load();
+    final baseUrl = dotenv.env["supabase_url"];
+    final anonKey = dotenv.env["anon_key"];
+    if(baseUrl != null && anonKey != null){
+      await Supabase.initialize(
+        url: baseUrl,
+        anonKey: anonKey,
+      );
+    }else{
+      runApp(MyApp(failed:true));
+      return;
+    }
   }
 
   runApp(MyApp(failed:false));
