@@ -86,7 +86,7 @@ class _tabsAccountState extends State<tabsAccount> {
                               MaterialPageRoute(builder: (context) => const MyApp()),
                             );
                           } catch (e) {
-                            print(e);
+                            // print(e);
                           }
                         },
                         label: const Text('ログアウト',

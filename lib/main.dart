@@ -56,13 +56,13 @@ class _HomePageState extends State<HomePage> {
     uriLinkStream.listen((Uri? uri)async {
       if (uri != null && uri.scheme == "enpower" && !logined) {
         logined = true;
-        print("Received OAuth callback: ${uri.toString()}");
+        // print("Received OAuth callback: ${uri.toString()}");
         final String? code = uri.queryParameters['code'];
         if (code != null) {
           try{
             final res = await Supabase.instance.client.auth.getSessionFromUrl(uri);
             
-            print(res.session);
+            // print(res.session);
             if (!res.session.isExpired) {
               final bool exist = await checkUserExists(res.session.user.userMetadata?["provider_id"]);
               if(exist){
@@ -78,10 +78,10 @@ class _HomePageState extends State<HomePage> {
               }
 
             } else {
-              print("Failed to authenticate user.");
+              // print("Failed to authenticate user.");
             }
           } catch (e) {
-            print("Error during authentication: $e");
+            // print("Error during authentication: $e");
           }
         }
       }
@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
             try {
               await signInWithDiscord();
             } catch (e) {
-              print(e);
+              // print(e);
             }
           },
           icon: const ImageIcon(
