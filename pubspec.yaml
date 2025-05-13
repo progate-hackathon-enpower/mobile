@@ -38,6 +38,7 @@ dependencies:
   url_launcher: ^6.3.1
   uni_links: ^0.5.1
   flutter_dotenv: ^5.2.1
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -91,3 +92,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_icons:
+  ios: true
+  image_path: "assets/images/icon.png"
+  remove_alpha_ios: true
+  android: true
+  adaptive_icon_background: "assets/images/icon.png"
+  adaptive_icon_foreground: "assets/images/icon.png"
