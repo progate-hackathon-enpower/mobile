@@ -141,34 +141,48 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(0, 17, 17, 17),
       body: Center(
-        child: ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor:
-                const Color.fromARGB(255, 231, 231, 231),
-            foregroundColor: Colors.black,
-            shape: const StadiumBorder(),
-            elevation: 0, // Shadow elevation
-            shadowColor: const Color.fromARGB(
-                255, 255, 255, 255), // Shadow color
-          ),
-          onPressed: () async {
-            try {
-              await signInWithDiscord();
-            } catch (e) {
-              // print(e);
-            }
-          },
-          icon: const ImageIcon(
-            size:30,
-            AssetImage("assets/images/discord.png"),
-            color: Color.fromARGB(255, 22, 22, 22),
-          ),
-          label: const Text('Discordでログイン',
-              style: (TextStyle(
-                  color: Color.fromARGB(255, 22, 22, 22),
-                  fontSize: 16))),
-        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+            Container(
+              constraints: BoxConstraints(maxWidth:400 ),
+            child:Image.asset(
+              'assets/images/icon.png',
+              fit: BoxFit.contain,
+              width: MediaQuery.of(context).size.width * 0.5
+            ),
+            ),
+            Supabase.instance.client.auth.currentSession == null ? ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    const Color.fromARGB(255, 231, 231, 231),
+                foregroundColor: Colors.black,
+                shape: const StadiumBorder(),
+                elevation: 0, // Shadow elevation
+                shadowColor: const Color.fromARGB(
+                    255, 255, 255, 255), // Shadow color
+              ),
+              onPressed: () async {
+                try {
+                  await signInWithDiscord();
+                } catch (e) {
+                  // print(e);
+                }
+              },
+              icon: const ImageIcon(
+                size:30,
+                AssetImage("assets/images/discord.png"),
+                color: Color.fromARGB(255, 22, 22, 22),
+              ),
+              label: const Text('Discordでログイン',
+                  style: (TextStyle(
+                      color: Color.fromARGB(255, 22, 22, 22),
+                      fontSize: 16))),
+            ):Container(),
+          ]
+        )
       ),
     );
   }
