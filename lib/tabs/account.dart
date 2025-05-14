@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 class tabsAccount extends StatefulWidget {
   const tabsAccount({Key? key}) : super(key: key);
@@ -28,6 +30,8 @@ class _tabsAccountState extends State<tabsAccount> {
         child: Text("アカウントの情報を取得できませんでした"),
       );
     }
+
+    var uuid = Uuid();
 
     // print(session.user.userMetadata);
     // print(session.user.userMetadata?["custom_claims"]["global_name"]);
@@ -68,31 +72,71 @@ class _tabsAccountState extends State<tabsAccount> {
                           )
                         ),
                       ),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 231, 231, 231),
-                          foregroundColor: Colors.black,
-                          shape: const StadiumBorder(),
-                          elevation: 0, // Shadow elevation
-                          shadowColor: const Color.fromARGB(
-                              255, 255, 255, 255), // Shadow color
-                        ),
-                        onPressed: () {
-                          try {
-                            supabase.auth.signOut();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MyApp(failed: false,)),
-                            );
-                          } catch (e) {
-                            // print(e);
-                          }
-                        },
-                        label: const Text('ログアウト',
-                            style: (TextStyle(
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Row(
+                          spacing: 10,
+                          children:[
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 231, 231, 231),
+                                foregroundColor: Colors.black,
+                                shape: const StadiumBorder(),
+                                elevation: 0, // Shadow elevation
+                                shadowColor: const Color.fromARGB(
+                                    255, 255, 255, 255), // Shadow color
+                              ),
+                              onPressed: () async {
+                                try {
+                                  final Uri uri = Uri.parse("https://github.com/apps/mokuhub-apps/installations/new?state=${uuid.v4()},enpower://auth");
+                                  if (await canLaunchUrl(uri)) {
+                                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                  } else {
+                                    print("URLを開けません: $uri");
+                                  }
+                                } catch (e) {
+                                  // print(e);
+                                }
+                              },
+                              icon: const ImageIcon(
+                                size:30,
+                                AssetImage("assets/images/github.png"),
                                 color: Color.fromARGB(255, 22, 22, 22),
-                                fontSize: 16))),
+                              ),
+                              label: const Text('GitHubと連携',
+                                  style: (TextStyle(
+                                      color: Color.fromARGB(255, 22, 22, 22),
+                                      fontSize: 16))),
+                            ),
+                            ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 231, 231, 231),
+                              foregroundColor: Colors.black,
+                              shape: const StadiumBorder(),
+                              elevation: 0, // Shadow elevation
+                              shadowColor: const Color.fromARGB(
+                                  255, 255, 255, 255), // Shadow color
+                            ),
+                            onPressed: () {
+                              try {
+                                supabase.auth.signOut();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const MyApp(failed: false,)),
+                                );
+                              } catch (e) {
+                                // print(e);
+                              }
+                            },
+                            label: const Text('ログアウト',
+                                style: (TextStyle(
+                                    color: Color.fromARGB(255, 22, 22, 22),
+                                    fontSize: 16))),
+                              ),
+                            ]
+                          )
                       ),
                     ],
                   )
