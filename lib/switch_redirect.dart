@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage();
+class SwitchPage extends StatefulWidget {
+  const SwitchPage();
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SwitchPage> createState() => _SwitchPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SwitchPageState extends State<SwitchPage> {
   bool logined = false;
   // final SupabaseClient supabase = Supabase.instance.client;
 
