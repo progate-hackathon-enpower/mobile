@@ -58,9 +58,18 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       onGenerateRoute: (settings) {
-        Uri uri = Uri.parse(settings.name ?? '');
-        if (uri.path == '/redirect') {
-          return MaterialPageRoute(builder: (context) => SwitchPage(uri));
+        // URLのパスを正規化
+        String path = settings.name ?? '';
+        if (kIsWeb) {
+          // Webの場合、window.location.pathnameから現在のパスを取得
+          final uri = Uri.parse(path);
+          path = uri.path;
+        }
+        
+        if (path == '/redirect' || path.startsWith('/redirect?')) {
+          return MaterialPageRoute(
+            builder: (context) => SwitchPage(Uri.parse(path))
+          );
         }
         return MaterialPageRoute(builder: (context) => HomePage());
       },
