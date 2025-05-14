@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/new_user.dart';
+import 'package:mobile/switch_redirect.dart';
 import 'package:mobile/tabs.dart';
 import 'package:mobile/utils/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -54,6 +55,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: failed ? Center(child:Text("初期化に失敗しました。")) : const HomePage(),
+      routes: {
+        "/redirect": (context) => SwitchPage()
+      },
     );
   }
 }
