@@ -60,21 +60,45 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         // URLのパスを正規化
         String path = settings.name ?? '';
+        
         if (kIsWeb) {
-          // Webの場合、window.location.pathnameから現在のパスを取得
-          final uri = Uri.parse(path);
-          path = uri.path;
+          try {
+            final uri = Uri.parse(path);
+            // ハッシュフラグメントがある場合は、それを優先
+            if (uri.fragment.isNotEmpty) {
+              path = '/${uri.fragment}';
+            } else {
+              path = uri.path;
+            }
+            
+            // 先頭のスラッシュがない場合は追加
+            if (!path.startsWith('/')) {
+              path = '/$path';
+            }
+          } catch (e) {
+            print('URI parse error: $e');
+            path = '/';
+          }
         }
         
-        if (path == '/redirect' || path.startsWith('/redirect?')) {
-          return MaterialPageRoute(
-            builder: (context) => SwitchPage(Uri.parse(path))
-          );
+        // パスに基づいてルーティング
+        switch (path) {
+          case '/redirect':
+          case '/test':
+            return MaterialPageRoute(
+              builder: (context) => path == '/redirect' 
+                ? SwitchPage(Uri.parse(path))
+                : const Text("テスト")
+            );
+          default:
+            // パスがクエリパラメータを含む/redirectで始まる場合
+            if (path.startsWith('/redirect?')) {
+              return MaterialPageRoute(
+                builder: (context) => SwitchPage(Uri.parse(path))
+              );
+            }
+            return MaterialPageRoute(builder: (context) => const HomePage());
         }
-        if(path == '/test'){
-          return MaterialPageRoute(builder: (context) => Text("テスト"));
-        }
-        return MaterialPageRoute(builder: (context) => HomePage());
       },
     );
   }
