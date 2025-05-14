@@ -17,40 +17,76 @@ class _SwitchPageState extends State<SwitchPage> {
   @override
   void initState() {
     super.initState();
-        print("ついに戻ってキタァァぁぁ！！！！！！");
-    final queryParameters = widget.uri.queryParameters;
-    final queryParam = queryParameters['state'] ?? '';
-    print(queryParam.split(","));
-    final customUri = Uri.parse(queryParam.split(",")[1]);
-    final url = queryParam.split(",").length == 2 
-    ? 
-    Uri(
-      host: customUri.host,
-      queryParameters: queryParameters,
-      path:widget.uri.path,
-      scheme: customUri.scheme
-    ).toString()
-    :
-    Uri(
-      host: "mokuhub.vercel.app",
-      queryParameters: queryParameters,
-      path:widget.uri.path,
-      scheme:"https"
-    ).toString();
+    handleRedirect();
+  }
 
-    openUrl()async{
-      if(kIsWeb){
+  void handleRedirect() async {
+    final queryParameters = widget.uri.queryParameters;
+    final state = queryParameters['state'] ?? '';
+    final stateComponents = state.split(',');
+    
+    // ディープリンクURIの取得（state パラメータの2番目の要素）
+    final String? deepLinkUri = stateComponents.length > 1 ? stateComponents[1] : null;
+    
+    if (deepLinkUri != null) {
+      // モバイルアプリの場合は直接ディープリンクを開く
+      if (!kIsWeb) {
+        final Uri uri = Uri.parse(deepLinkUri).replace(
+          queryParameters: {
+            ...queryParameters, // 既存のクエリパラメータをすべて含める
+            'original_path': widget.uri.path, // 元のパスも保持
+          }
+        );
+        
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri);
+          if (mounted) {
+            Navigator.of(context).pop(); // リダイレクト後にページを閉じる
+          }
+        } else {
+          setState(() {
+            message = "アプリを開けませんでした";
+          });
+        }
+      } else {
+        // Web環境の場合
+        final customUri = Uri.parse(deepLinkUri);
+        final url = Uri(
+          scheme: customUri.scheme,
+          host: customUri.host,
+          path: widget.uri.path,
+          queryParameters: queryParameters,
+        ).toString();
+
         final Uri uri = Uri.parse(url);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         } else {
-          setState((){
-          message="リダイレクトに失敗しました";
+          setState(() {
+            message = "リダイレクトに失敗しました";
+          });
+        }
+      }
+    } else {
+      // ディープリンクURIがない場合はデフォルトのリダイレクト
+      final url = Uri(
+        scheme: "https",
+        host: "mokuhub.vercel.app",
+        path: widget.uri.path,
+        queryParameters: queryParameters,
+      ).toString();
+
+      if (kIsWeb) {
+        final Uri uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          setState(() {
+            message = "リダイレクトに失敗しました";
           });
         }
       }
     }
-    openUrl();
   }
 
   @override
@@ -60,16 +96,25 @@ class _SwitchPageState extends State<SwitchPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:[
+          children: [
             Container(
-              constraints: BoxConstraints(maxWidth:400 ),
-            child:Image.asset(
-              'assets/images/icon.png',
-              fit: BoxFit.contain,
-              width: MediaQuery.of(context).size.width * 0.5
+              constraints: BoxConstraints(maxWidth: 400),
+              child: Image.asset(
+                'assets/images/icon.png',
+                fit: BoxFit.contain,
+                width: MediaQuery.of(context).size.width * 0.5
+              ),
             ),
-            ),
-            Text(message,style:TextStyle(color:Colors.white))]
+            if (message.isNotEmpty)
+              Text(
+                message,
+                style: TextStyle(color: Colors.white)
+              ),
+            if (message.isEmpty)
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+          ]
         )
       ),
     );
