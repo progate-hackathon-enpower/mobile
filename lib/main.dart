@@ -55,9 +55,17 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: failed ? Center(child:Text("初期化に失敗しました。")) : const HomePage(),
-      routes: {
-        "/redirect": (context) => SwitchPage()
-      },
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (context) => HomePage());
+          case '/redirect':
+            return MaterialPageRoute(builder: (context) => SwitchPage());
+          default:
+            return MaterialPageRoute(builder: (context) => HomePage());
+        }
+      }
     );
   }
 }
