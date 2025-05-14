@@ -71,6 +71,9 @@ class MyApp extends StatelessWidget {
             builder: (context) => SwitchPage(Uri.parse(path))
           );
         }
+        if(path == '/test'){
+          return MaterialPageRoute(builder: (context) => Text("テスト"));
+        }
         return MaterialPageRoute(builder: (context) => HomePage());
       },
     );
