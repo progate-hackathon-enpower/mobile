@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/new_user.dart';
+import 'package:mobile/switch_redirect.dart';
 import 'package:mobile/tabs.dart';
 import 'package:mobile/utils/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
+  setPathUrlStrategy();
   // WidgetsFlutterBinding.ensureInitialized();
   if(kIsWeb){
     const baseUrl = String.fromEnvironment("SUPABASE_URL");
@@ -50,10 +53,53 @@ class MyApp extends StatelessWidget {
       title: 'Enpower',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 22, 22, 22)),
+            seedColor: const Color.fromARGB(255, 0, 0, 0)),
         useMaterial3: true,
       ),
-      home: failed ? Center(child:Text("初期化に失敗しました。")) : const HomePage(),
+      initialRoute: "/",
+      onGenerateRoute: (settings) {
+        // URLのパスを正規化
+        String path = settings.name ?? '';
+        
+        if (kIsWeb) {
+          try {
+            final uri = Uri.parse(path);
+            // ハッシュフラグメントがある場合は、それを優先
+            if (uri.fragment.isNotEmpty) {
+              path = '/${uri.fragment}';
+            } else {
+              path = uri.path;
+            }
+            
+            // 先頭のスラッシュがない場合は追加
+            if (!path.startsWith('/')) {
+              path = '/$path';
+            }
+          } catch (e) {
+            print('URI parse error: $e');
+            path = '/';
+          }
+        }
+        
+        // パスに基づいてルーティング
+        switch (path) {
+          case '/redirect':
+          case '/test':
+            return MaterialPageRoute(
+              builder: (context) => path == '/redirect' 
+                ? SwitchPage(Uri.parse(path))
+                : const Text("テスト")
+            );
+          default:
+            // パスがクエリパラメータを含む/redirectで始まる場合
+            if (path.startsWith('/redirect?')) {
+              return MaterialPageRoute(
+                builder: (context) => SwitchPage(Uri.parse(path))
+              );
+            }
+            return MaterialPageRoute(builder: (context) => const HomePage());
+        }
+      },
     );
   }
 }
@@ -141,7 +187,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(0, 17, 17, 17),
+      backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
