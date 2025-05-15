@@ -51,15 +51,7 @@ class _SwitchPageState extends State<SwitchPage> {
         }
       } else {
         // Web環境の場合
-        final customUri = Uri.parse(deepLinkUri);
-        final url = Uri(
-          scheme: customUri.scheme,
-          host: customUri.host,
-          path: widget.uri.path,
-          queryParameters: queryParameters,
-        ).toString();
-
-        final Uri uri = Uri.parse(url);
+        final Uri uri = Uri.parse("enpower://redirect");
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         } else {
