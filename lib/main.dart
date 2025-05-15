@@ -6,7 +6,7 @@ import 'package:mobile/utils/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
-import 'package:uni_links/uni_links.dart';
+// import 'package:uni_links/uni_links.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
@@ -82,40 +82,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb){ 
-      uriLinkStream.listen((Uri? uri)async {
-        if (uri != null && uri.scheme == "enpower" && !logined) {
-          logined = true;
-          // print("Received OAuth callback: ${uri.toString()}");
-          final String? code = uri.queryParameters['code'];
-          if (code != null) {
-            try{
-              final res = await Supabase.instance.client.auth.getSessionFromUrl(uri);
-              // print(res.session);
-              if (!res.session.isExpired) {
-                final bool exist = await checkUserExists(res.session.user.userMetadata?["provider_id"]);
-                if(exist){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
-                  );
-                }else{
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => newUserPage()),
-                  );
-                }
-              } else {
-                // print("Failed to authenticate user.");
-              }
-            } catch (e) {
-              // print("Error during authentication: $e");
-            }
-          }
-        }
-    });
-  
-  }
+    // if (!kIsWeb){ 
+    //   uriLinkStream.listen((Uri? uri)async {
+    //     if (uri != null && uri.scheme == "enpower" && uri.path == "/redirect" && !logined) {
+          
+    //     }
+    //   });
+    // }
 
   
   }

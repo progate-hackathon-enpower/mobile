@@ -89,7 +89,7 @@ class _tabsAccountState extends State<tabsAccount> {
                               ),
                               onPressed: () async {
                                 try {
-                                  final Uri uri = Uri.parse("https://github.com/apps/mokuhub-apps/installations/new?state=${uuid.v4()},enpower://auth");
+                                  final Uri uri = Uri.parse("https://github.com/apps/mokuhub-apps/installations/new?state=${uuid.v4()},mobile&redirect_uri=");
                                   if (await canLaunchUrl(uri)) {
                                     await launchUrl(uri, mode: LaunchMode.externalApplication);
                                   } else {
