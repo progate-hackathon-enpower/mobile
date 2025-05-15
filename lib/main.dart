@@ -7,7 +7,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
@@ -61,10 +60,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         Uri uri = Uri.parse(settings.name ?? '');
         if (uri.path == '/redirect') {
-          openLink()async{
-            await launchUrl(Uri.parse("https://xenfo.org"));
-          }
-          openLink();
+          return MaterialPageRoute(builder: (context) => SwitchPage(uri));
         }
         return MaterialPageRoute(builder: (context) => HomePage());
       },
