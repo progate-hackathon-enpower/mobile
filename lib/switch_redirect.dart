@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:mobile/utils/github.dart';
+import 'package:mobile/utils/users.dart';
 class SwitchPage extends StatefulWidget {
   final Uri uri;
   const SwitchPage(this.uri);
@@ -68,23 +69,13 @@ class _SwitchPageState extends State<SwitchPage> {
         }
       }
     } else {
-      // ディープリンクURIがない場合はデフォルトのリダイレクト
-      final url = Uri(
-        scheme: "https",
-        host: "mokuhub.vercel.app",
-        path: widget.uri.path,
-        queryParameters: queryParameters,
-      ).toString();
-
-      if (kIsWeb) {
-        final Uri uri = Uri.parse(url);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        } else {
-          setState(() {
-            message = "リダイレクトに失敗しました";
-          });
-        }
+      // ディープリンクURIがない場合はそのまま認証
+      final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
+      if(res != null){
+        final user = await getGitHubUser(res);
+        updateUser(
+          githubId: user?.id.toString(),
+        );
       }
     }
   }
