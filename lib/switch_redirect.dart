@@ -28,46 +28,28 @@ class _SwitchPageState extends State<SwitchPage> {
     
     // ディープリンクURIの取得（state パラメータの2番目の要素）
     final String? deepLinkUri = stateComponents.length > 1 ? stateComponents[1] : null;
-    
-    if (deepLinkUri != null) {
-      // モバイルアプリの場合は直接ディープリンクを開く
-      if (!kIsWeb) {
-        final Uri uri = Uri.parse(deepLinkUri).replace(
-          queryParameters: {
-            ...queryParameters, // 既存のクエリパラメータをすべて含める
-            'original_path': widget.uri.path, // 元のパスも保持
-          }
-        );
-        
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri);
-          if (mounted) {
-            Navigator.of(context).pop(); // リダイレクト後にページを閉じる
-          }
-        } else {
-          setState(() {
-            message = "アプリを開けませんでした";
-          });
-        }
-      } else {
-        // Web環境の場合
-        final Uri uri = Uri.parse("enpower://redirect");
-        try{
-          await launchUrl(uri);
-        }catch(_){
-          setState(() {
-            message = "リダイレクトに失敗しました";
-          });
-        }
-      }
-    } else {
-      // ディープリンクURIがない場合はそのまま認証
-      final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
+    final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
+    try{
       if(res != null){
         final user = await getGitHubUser(res);
         updateUser(
           githubId: user?.id.toString(),
         );
+      }
+    }catch(e){
+      setState(() {
+        message = "認証に失敗:$e";
+      });
+    }
+    if (!kIsWeb && deepLinkUri != null) {
+      // モバイルアプリの場合は直接ディープリンクを開く
+      final Uri uri = Uri.parse("enpower://redirect");
+      try{
+        await launchUrl(uri);
+      }catch(e){
+        setState(() {
+          message = "リダイレクトに失敗しました:$uri,$e";
+        });
       }
     }
   }
