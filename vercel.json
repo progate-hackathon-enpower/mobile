@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "name": "mokuhub",
+    "rewrites": [
+      {"source": "/(.*)", "destination": "/"}
+    ]
+}
