@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mobile/utils/github.dart';
-import 'package:mobile/utils/users.dart';
+
 class SwitchPage extends StatefulWidget {
   final Uri uri;
   const SwitchPage(this.uri);
@@ -27,24 +26,10 @@ class _SwitchPageState extends State<SwitchPage> {
     final stateComponents = state.split(',');
     
     // ディープリンクURIの取得（state パラメータの2番目の要素）
-    final String? deepLinkUri = stateComponents.length > 1 ? stateComponents[1] : null;
-    final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
-    try{
-      if(res != null){
-        final user = await getGitHubUser(res);
-        updateUser(
-          githubId: user?.id.toString(),
-        );
-      }
-    }catch(e){
-      setState(() {
-        message = "認証に失敗:$e";
-      });
-      return;
-    }
-    if (!kIsWeb && deepLinkUri != null) {
+    final String? openMode = stateComponents.length > 1 ? stateComponents[1] : null;
+    if (kIsWeb && openMode == "mobile") {
       // モバイルアプリの場合は直接ディープリンクを開く
-      final Uri uri = Uri.parse("enpower://redirect");
+      final Uri uri = Uri(scheme: "enpower",path:widget.uri.path,queryParameters: widget.uri.queryParameters);
       try{
         await launchUrl(uri);
       }catch(e){
