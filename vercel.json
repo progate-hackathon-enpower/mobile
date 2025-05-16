@@ -11,6 +11,9 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" }
       ]
+    },
+    {
+      "buildCommand": "touch .env && flutter/bin/flutter build web --release --web-renderer html --dart-define=SUPABASE_URL=${SUPABASE_URL} --dart-define=SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY} --dart-define=GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} --dart-define=GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}"
     }
   ]
 }
