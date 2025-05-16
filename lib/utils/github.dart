@@ -48,7 +48,14 @@ Future<String?> getGitHubAccessToken({
   try {
     // 環境変数から認証情報を取得
     final SupabaseClient supabase = Supabase.instance.client;
-    final response = await supabase.functions.invoke('get_github_token', body: {'name': 'Functions','code':code,'redirect_uri':"https://mokuhub.vercel.app/redirect"});
+    final response = await supabase.functions.invoke(
+      'get_github_token', 
+      body: {
+        'name': 'Functions',
+        'code':code,
+        'redirect_uri':"https://mokuhub.vercel.app/redirect"
+      }
+    );
     final data = response.data;
     return data['access_token'] as String?;
   } catch (e) {

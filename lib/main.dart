@@ -13,7 +13,7 @@ import 'package:url_strategy/url_strategy.dart';
 bool logined = false;
 void main() async {
   setPathUrlStrategy();
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   if(kIsWeb){
     const baseUrl = String.fromEnvironment("SUPABASE_URL");
     const anonKey = String.fromEnvironment("SUPABASE_ANON_KEY");
@@ -84,15 +84,21 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb){ 
+    if(!kIsWeb){
+      final session = Supabase.instance.client.auth.currentSession;
       uriLinkStream.listen((Uri? uri)async {
-        if (uri != null && uri.scheme == "enpower" && uri.path == "/redirect" && !logined) {
+        print(uri?.scheme);
+        print(uri?.path);
+        if (uri != null && uri.scheme == "enpower" && uri.path == "/redirect") {
           final queryParameters = uri.queryParameters;
           final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
+          print(res);
           try{
             if(res != null){
               final user = await getGitHubUser(res);
+              print(user?.id);
               updateUser(
+                userId:session?.user.userMetadata?["provider_id"],
                 githubId: user?.id.toString(),
               );
             }
@@ -100,11 +106,11 @@ class _HomePageState extends State<HomePage> {
           }catch(e){
             print(e);
           }
+        }else{
+          print("対応してないよーん");
         }
       });
     }
-
-  
   }
 
   Future<void> signInWithDiscord() async {
