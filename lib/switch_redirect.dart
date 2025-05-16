@@ -35,7 +35,7 @@ class _SwitchPageState extends State<SwitchPage> {
     // ディープリンクURIの取得（state パラメータの2番目の要素）
     final String? openMode = stateComponents.length > 1 ? stateComponents[1] : null;
     if (kIsWeb) {
-      if(openMode == null){
+      if(openMode == "mobile"){
         // モバイルアプリの場合は直接ディープリンクを開く
         final Uri uri = Uri(scheme: "enpower",path:widget.uri.path,queryParameters: widget.uri.queryParameters);
         try{
@@ -68,7 +68,7 @@ class _SwitchPageState extends State<SwitchPage> {
               setState((){
                 message=Column(
                   children:[
-                    Text("GitHubアカウント「${user?.name}」と連携が完了しました。"),
+                    Text("GitHubアカウント「${user?.name}」と連携が完了しました。",style:TextStyle(color:Colors.white)),
                     ElevatedButton(
                       onPressed: (){
                         Navigator.push(
