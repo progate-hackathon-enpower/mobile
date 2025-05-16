@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 // import 'package:uni_links/uni_links.dart';
 import 'package:url_strategy/url_strategy.dart';
 
+bool logined = false;
 void main() async {
   setPathUrlStrategy();
   // WidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         Uri uri = Uri.parse(settings.name ?? '');
         if (uri.path == '/redirect') {
+          logined = true;
           return MaterialPageRoute(builder: (context) => SwitchPage(uri));
         }
         return MaterialPageRoute(builder: (context) => HomePage());
@@ -76,7 +78,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool logined = false;
   final SupabaseClient supabase = Supabase.instance.client;
 
   @override
