@@ -51,11 +51,7 @@ Future<String?> getGitHubAccessToken({
     final String? clientId = kIsWeb 
       ? const String.fromEnvironment("GITHUB_CLIENT_ID")
       : dotenv.env["GITHUB_CLIENT_ID"];
-    final String? clientSecret = kIsWeb
-      ? const String.fromEnvironment("GITHUB_CLIENT_SECRET")
-      : dotenv.env["GITHUB_CLIENT_SECRET"];
-
-    if (clientId == null || clientSecret == null) {
+    if (clientId == null) {
       throw Exception('GitHub credentials not found in environment variables');
     }
 
@@ -68,7 +64,6 @@ Future<String?> getGitHubAccessToken({
       },
       body: jsonEncode({
         'client_id': clientId,
-        'client_secret': clientSecret,
         'code': code,
         'redirect_uri': redirectUri,
       }),
