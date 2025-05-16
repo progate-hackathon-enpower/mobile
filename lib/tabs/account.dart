@@ -57,6 +57,7 @@ class _tabsAccountState extends State<tabsAccount> {
                   padding: const EdgeInsets.all(30),
                   child:Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ClipRRect( // アイコン表示（角丸）
                         borderRadius: BorderRadius.circular(200),
@@ -92,8 +93,6 @@ class _tabsAccountState extends State<tabsAccount> {
                                   final Uri uri = Uri.parse("https://github.com/apps/mokuhub-apps/installations/new?state=${uuid.v4()},mobile&redirect_uri=https://mokuhub.vercel.app/redirect");
                                   if (await canLaunchUrl(uri)) {
                                     await launchUrl(uri, mode: LaunchMode.externalApplication);
-                                  } else {
-                                    print("URLを開けません: $uri");
                                   }
                                 } catch (e) {
                                   // print(e);
@@ -104,7 +103,7 @@ class _tabsAccountState extends State<tabsAccount> {
                                 AssetImage("assets/images/github.png"),
                                 color: Color.fromARGB(255, 22, 22, 22),
                               ),
-                              label: const Text('GitHubと連携',
+                              label: const Text('連携',
                                   style: (TextStyle(
                                       color: Color.fromARGB(255, 22, 22, 22),
                                       fontSize: 16))),
