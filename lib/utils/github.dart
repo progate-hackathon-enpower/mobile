@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // GitHubユーザー情報を格納するクラス
 class GitHubUser {
@@ -55,26 +56,12 @@ Future<String?> getGitHubAccessToken({
       throw Exception('GitHub credentials not found in environment variables');
     }
 
-    // GitHubのアクセストークンエンドポイントにPOSTリクエスト
-    final response = await http.post(
-      Uri.parse('https://github.com/login/oauth/access_token'),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'client_id': clientId,
-        'code': code,
-        'redirect_uri': redirectUri,
-      }),
-    );
+    final SupabaseClient supabase = Supabase.instance.client;
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      return data['access_token'] as String?;
-    } else {
-      throw Exception('Failed to get access token: ${response.statusCode}');
-    }
+    // GitHubのアクセストークンエンドポイントにPOSTリクエスト
+    final response = await supabase.functions.invoke('get_github_token', body: {'name': 'Functions','code':code,'redirect_uri':"https://mokuhub.vercel.app/redirect"});
+    final data = response.data;
+    return data['access_token'] as String?;
   } catch (e) {
     print('Error getting GitHub access token: $e');
     return null;
