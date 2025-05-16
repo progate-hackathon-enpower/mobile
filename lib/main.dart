@@ -83,15 +83,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // if (!kIsWeb){ 
-    //   uriLinkStream.listen((Uri? uri)async {
-    //     if (uri != null && uri.scheme == "enpower" && uri.path == "/redirect" && !logined) {
-          
-    //     }
-    //   });
-    // }
-
-  
   }
 
   Future<void> signInWithDiscord() async {
