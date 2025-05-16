@@ -53,7 +53,7 @@ class _SwitchPageState extends State<SwitchPage> {
           });
         }
       }else{
-        if (widget.uri.scheme == "enpower" && widget.uri.path == "/redirect") {
+        if (widget.uri.path == "/redirect") {
           final queryParameters = widget.uri.queryParameters;
           final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
           print(res);
@@ -61,7 +61,7 @@ class _SwitchPageState extends State<SwitchPage> {
             if(res != null){
               final user = await getGitHubUser(res);
               print(user?.id);
-              updateUser(
+              await updateUser(
                 userId:session?.user.userMetadata?["provider_id"],
                 githubId: user?.id.toString(),
               );
@@ -85,8 +85,6 @@ class _SwitchPageState extends State<SwitchPage> {
           }catch(e){
             print(e);
           }
-        }else{
-          print("対応してないよーん");
         }
       }
     }
