@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -90,7 +91,7 @@ class _tabsAccountState extends State<tabsAccount> {
                               ),
                               onPressed: () async {
                                 try {
-                                  final Uri uri = Uri.parse("https://github.com/apps/mokuhub-apps/installations/new?state=${uuid.v4()},mobile&redirect_uri=https://mokuhub.vercel.app/redirect");
+                                  final Uri uri = Uri.parse("https://github.com/apps/mokuhub-apps/installations/new?state=${uuid.v4()}${kIsWeb ? "" : ",mobile"}&redirect_uri=https://mokuhub.vercel.app/redirect");
                                   if (await canLaunchUrl(uri)) {
                                     await launchUrl(uri, mode: LaunchMode.externalApplication);
                                   }
