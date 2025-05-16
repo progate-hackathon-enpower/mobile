@@ -12,7 +12,9 @@ class SwitchPage extends StatefulWidget {
 
 class _SwitchPageState extends State<SwitchPage> {
   // final SupabaseClient supabase = Supabase.instance.client;
-  String message = "";
+  Widget message = CircularProgressIndicator(
+    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+  );
 
   @override
   void initState() {
@@ -30,14 +32,21 @@ class _SwitchPageState extends State<SwitchPage> {
     if (kIsWeb && openMode == "mobile") {
       // モバイルアプリの場合は直接ディープリンクを開く
         setState(() {
-          message = "ここまではきてる";
+          message = Text("ここまではきてる", style:TextStyle(color: Colors.white));
         });
       final Uri uri = Uri(scheme: "enpower",path:widget.uri.path,queryParameters: widget.uri.queryParameters);
       try{
-        await launchUrl(uri);
+        setState((){
+          message = ElevatedButton(
+            onPressed: () async {
+              await launchUrl(uri);
+            },
+            child: Text('アプリを開く'),
+          );
+        });
       }catch(e){
         setState(() {
-          message = "リダイレクトに失敗しました:$uri,$e";
+          message = Text("リダイレクトに失敗しました:$uri,$e", style:TextStyle(color: Colors.white));
         });
       }
     }
@@ -59,15 +68,7 @@ class _SwitchPageState extends State<SwitchPage> {
                 width: MediaQuery.of(context).size.width * 0.5
               ),
             ),
-            if (message.isNotEmpty)
-              Text(
-                message,
-                style: TextStyle(color: Colors.white)
-              ),
-            if (message.isEmpty)
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
+            message
           ]
         )
       ),
