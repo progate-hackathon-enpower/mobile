@@ -29,6 +29,9 @@ class _SwitchPageState extends State<SwitchPage> {
     final String? openMode = stateComponents.length > 1 ? stateComponents[1] : null;
     if (kIsWeb && openMode == "mobile") {
       // モバイルアプリの場合は直接ディープリンクを開く
+        setState(() {
+          message = "ここまではきてる";
+        });
       final Uri uri = Uri(scheme: "enpower",path:widget.uri.path,queryParameters: widget.uri.queryParameters);
       try{
         await launchUrl(uri);
