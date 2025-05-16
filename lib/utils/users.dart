@@ -21,16 +21,16 @@ Future<void> newUser(String userId, String displayName, String avatarUrl, String
       });
 }
 
-Future<void> updateUser({String? userId, String? displayName, String? avatarUrl, String? githubId}) async {
-  if(userId == null && displayName == null && avatarUrl == null && githubId == null){
+Future<void> updateUser({required String userId, String? displayName, String? avatarUrl, String? githubId}) async {
+  if(displayName == null && avatarUrl == null && githubId == null){
     return;
   }
   await Supabase.instance.client
       .from('users')
       .update({
-        displayName != null ? 'display_name' : displayName : null,
-        avatarUrl != null ? 'icon_url' : avatarUrl : null,
-        githubId != null ? 'github_id' : githubId : null,
-      });
+        if(displayName != null) 'display_name' : displayName,
+        if(avatarUrl != null) 'icon_url' : avatarUrl,
+        if(githubId != null) 'github_id' : githubId,
+      }).eq('id', userId);
 }
 
