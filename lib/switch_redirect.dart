@@ -40,6 +40,7 @@ class _SwitchPageState extends State<SwitchPage> {
       setState(() {
         message = "認証に失敗:$e";
       });
+      return;
     }
     if (!kIsWeb && deepLinkUri != null) {
       // モバイルアプリの場合は直接ディープリンクを開く
