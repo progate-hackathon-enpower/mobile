@@ -58,7 +58,6 @@ Future<String?> getGitHubAccessToken({
 
     final SupabaseClient supabase = Supabase.instance.client;
 
-    // GitHubのアクセストークンエンドポイントにPOSTリクエスト
     final response = await supabase.functions.invoke('get_github_token', body: {'name': 'Functions','code':code,'redirect_uri':"https://mokuhub.vercel.app/redirect"});
     final data = response.data;
     return data['access_token'] as String?;
