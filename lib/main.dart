@@ -6,7 +6,8 @@ import 'package:mobile/utils/users.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
-// import 'package:uni_links/uni_links.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:mobile/utils/github.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 bool logined = false;
@@ -83,6 +84,27 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    if (!kIsWeb){ 
+      uriLinkStream.listen((Uri? uri)async {
+        if (uri != null && uri.scheme == "enpower" && uri.path == "/redirect" && !logined) {
+          final queryParameters = uri.queryParameters;
+          final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
+          try{
+            if(res != null){
+              final user = await getGitHubUser(res);
+              updateUser(
+                githubId: user?.id.toString(),
+              );
+            }
+            print("リンクが完了しました");
+          }catch(e){
+            print(e);
+          }
+        }
+      });
+    }
+
+  
   }
 
   Future<void> signInWithDiscord() async {

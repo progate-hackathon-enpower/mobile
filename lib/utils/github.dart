@@ -1,7 +1,5 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 // GitHubユーザー情報を格納するクラス
@@ -49,15 +47,7 @@ Future<String?> getGitHubAccessToken({
 }) async {
   try {
     // 環境変数から認証情報を取得
-    final String? clientId = kIsWeb 
-      ? const String.fromEnvironment("GITHUB_CLIENT_ID")
-      : dotenv.env["GITHUB_CLIENT_ID"];
-    if (clientId == null) {
-      throw Exception('GitHub credentials not found in environment variables');
-    }
-
     final SupabaseClient supabase = Supabase.instance.client;
-
     final response = await supabase.functions.invoke('get_github_token', body: {'name': 'Functions','code':code,'redirect_uri':"https://mokuhub.vercel.app/redirect"});
     final data = response.data;
     return data['access_token'] as String?;
