@@ -25,6 +25,7 @@ class TabsScreen extends State<PageViewTabsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar:BottomNavigationBar(
+        selectedItemColor: Color.fromARGB(255, 46, 204, 64),
         currentIndex: selectedIndex,
         enableFeedback: false,
         onTap: (value) {
@@ -46,7 +47,7 @@ class TabsScreen extends State<PageViewTabsScreen> {
             label: 'アカウント',
           ),
         ],
-        backgroundColor: const Color.fromARGB(255, 40, 40, 40),
+        backgroundColor: const Color.fromARGB(255, 30, 22, 80),
       ),
       body: IndexedStack(
         index:selectedIndex,
