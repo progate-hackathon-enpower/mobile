@@ -55,6 +55,8 @@ class _SwitchPageState extends State<SwitchPage> {
       }else{
         if (widget.uri.path == "/redirect") {
           final queryParameters = widget.uri.queryParameters;
+          print("パラメーター");
+          print(queryParameters['code']);
           final res = await getGitHubAccessToken(code: queryParameters['code'] ?? '', redirectUri: "https://mokuhub.vercel.app/redirect");
           print(res);
           try{
