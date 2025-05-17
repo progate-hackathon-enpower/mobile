@@ -89,3 +89,11 @@ Future<GitHubUser?> getGitHubUser(String accessToken) async {
   }
 }
 
+Future<String> getStats(String githubUsername) async {
+  final response = await http.get(
+    Uri.parse('https://api.github.com/users/$githubUsername/events/public'),
+  );
+  print("ボディ");
+  return response.body;
+}
+

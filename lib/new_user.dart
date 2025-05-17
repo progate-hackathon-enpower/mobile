@@ -40,7 +40,7 @@ class _newUserPageState extends State<newUserPage> {
           floatingActionButton: FloatingActionButton(
           heroTag: "next_button",
           onPressed: ()async{
-            await newUser(session?.user.userMetadata?["provider_id"], displayName, session?.user.userMetadata?["avatar_url"], null);
+            await newUser(session?.user.userMetadata?["provider_id"], displayName, session?.user.userMetadata?["avatar_url"], null,null);
             Navigator.push(context,
               MaterialPageRoute(builder: (context) => PageViewTabsScreen()),
             );

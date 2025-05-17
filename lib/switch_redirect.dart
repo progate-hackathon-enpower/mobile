@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mobile/utils/github.dart';
 import 'package:mobile/utils/users.dart';
@@ -63,9 +62,11 @@ class _SwitchPageState extends State<SwitchPage> {
             if(res != null){
               final user = await getGitHubUser(res);
               print(user?.id);
+              print(user?.login);
               await updateUser(
                 userId:session?.user.userMetadata?["provider_id"],
                 githubId: user?.id.toString(),
+                githubUsername: user?.name,
               );
               setState((){
                 message=Column(
@@ -73,10 +74,7 @@ class _SwitchPageState extends State<SwitchPage> {
                     Text("GitHubアカウント「${user?.name}」と連携が完了しました。",style:TextStyle(color:Colors.white)),
                     ElevatedButton(
                       onPressed: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
+                        Navigator.pushReplacementNamed(context, '/');
                       }, 
                       child: Text("ホームに戻る")
                     )

@@ -102,20 +102,20 @@ class _HomePageState extends State<HomePage> {
                 githubId: user?.id.toString(),
               );
               showDialog(
-              context: context,
-              builder: (_) {
-                return AlertDialog(
-                  title: Text("連携完了"),
-                  content: Text("GitHubアカウント「${user?.name}」との連携が完了しました"),
-                  actions: <Widget>[
-                    ElevatedButton(
-                      child: Text("OK"),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                );
-              },
-            );
+                context: context,
+                builder: (_) {
+                  return AlertDialog(
+                    title: Text("連携完了"),
+                    content: Text("GitHubアカウント「${user?.name}」との連携が完了しました"),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        child: Text("OK"),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  );
+                },
+              );
             }
           }catch(e){
             print(e);

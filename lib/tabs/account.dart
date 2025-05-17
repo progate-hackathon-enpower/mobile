@@ -4,7 +4,7 @@ import 'package:mobile/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
-
+import 'package:mobile/utils/users.dart';
 class tabsAccount extends StatefulWidget {
   const tabsAccount({Key? key}) : super(key: key);
   @override
@@ -39,21 +39,25 @@ class _tabsAccountState extends State<tabsAccount> {
     return WillPopScope(
       onWillPop: () async => false,
         child: Scaffold(
-              appBar: AppBar(
-                centerTitle: false,
-                automaticallyImplyLeading: false,
-                title: const Text(
-                  'アカウント',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )
-                ),
-                titleTextStyle: const TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255), fontSize: 20
-                ),
-                backgroundColor: const Color.fromARGB(255, 40, 40, 40),
-              ),
-              body: Center(
+          appBar: AppBar(
+            centerTitle: false,
+            automaticallyImplyLeading: false,
+            title: const Text(
+              'アカウント',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              )
+            ),
+            titleTextStyle: const TextStyle(
+              color: Color.fromARGB(255, 255, 255, 255), fontSize: 20
+            ),
+            backgroundColor: const Color.fromARGB(255, 40, 40, 40),
+          ),
+          body: FutureBuilder(
+            future: getUser(session.user.userMetadata?["provider_id"]),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.done){
+              return Center(
                 child:Container(
                   padding: const EdgeInsets.all(30),
                   child:Column(
@@ -66,17 +70,22 @@ class _tabsAccountState extends State<tabsAccount> {
                       ),
                       Container(
                         padding: const EdgeInsets.only(top: 10),
-                        child:Text(
-                          session.user.userMetadata?["custom_claims"]["global_name"], 
-                          style: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          )
-                        ),
+                        child:Column(
+                          children:[
+                            Text(
+                              snapshot.data?["display_name"] ?? session.user.userMetadata?["custom_claims"]["global_name"],
+                              style: const TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                              )
+                            ),
+                          ]
+                        )
                       ),
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           spacing: 10,
                           children:[
                             ElevatedButton.icon(
@@ -141,8 +150,12 @@ class _tabsAccountState extends State<tabsAccount> {
                     ],
                   )
                 )
-              )
-            ),
+              );}
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            })
+      ),
     );
   }
 }

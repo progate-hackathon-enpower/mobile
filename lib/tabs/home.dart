@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/utils/users.dart';
+import 'dart:convert';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:mobile/utils/github.dart';
 
 class tabsHome extends StatefulWidget {
   const tabsHome({Key? key}) : super(key: key);
@@ -19,6 +23,16 @@ class _tabsHomeState extends State<tabsHome>{
 
   @override
   Widget build(BuildContext context) {
+    Future<String> getGitHubStats() async {
+      final session = Supabase.instance.client.auth.currentSession;
+      final userId = session?.user.userMetadata?["provider_id"];
+      final userProfile = await getUser(userId);
+      print(userProfile);
+      print(userProfile?["github_username"]);
+      final stats = await getStats(userProfile?["github_username"]);
+      print(stats);
+      return stats;
+    }
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -90,11 +104,26 @@ class _tabsHomeState extends State<tabsHome>{
             color: Color.fromARGB(200, 255, 255, 255),
           ),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            
-          ],
+        body: FutureBuilder(
+            future: getGitHubStats(),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.done){
+                final data = jsonDecode(snapshot.data!) as List<dynamic>;
+                return data.length == 0 ? Center(child: Text("活動がありません")) : ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) => ListTile(
+                    title: Text(data[index]['type'] ?? 'Unknown Event'),
+                    subtitle: Text('Repository: ${data[index]['repo']['name'] ?? 'Unknown'}'),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(data[index]['actor']['avatar_url']),
+                    ),
+                  ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
         )
       ),
     );
