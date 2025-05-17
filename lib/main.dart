@@ -101,8 +101,22 @@ class _HomePageState extends State<HomePage> {
                 userId:session?.user.userMetadata?["provider_id"],
                 githubId: user?.id.toString(),
               );
+              showDialog(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                  title: Text("連携完了"),
+                  content: Text("GitHubアカウント「${user?.name}」との連携が完了しました"),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      child: Text("OK"),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                );
+              },
+            );
             }
-            print("リンクが完了しました");
           }catch(e){
             print(e);
           }
