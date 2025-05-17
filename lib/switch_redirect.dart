@@ -66,7 +66,7 @@ class _SwitchPageState extends State<SwitchPage> {
               await updateUser(
                 userId:session?.user.userMetadata?["provider_id"],
                 githubId: user?.id.toString(),
-                githubUsername: user?.name,
+                githubUsername: user?.login,
               );
               setState((){
                 message=Column(
