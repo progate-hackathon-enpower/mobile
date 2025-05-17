@@ -53,12 +53,13 @@ Future<String?> getGitHubAccessToken({
       body: {
         'name': 'Functions',
         'code':code,
-        'redirect_uri':"https://mokuhub.vercel.app/redirect"
+        'redirect_uri':redirectUri
       }
     );
-    print(response);
     final data = response.data;
-    return data['access_token'] as String?;
+    
+    print(data.runtimeType);
+    return jsonDecode(data)['access_token'] as String?;
   } catch (e) {
     print('Error getting GitHub access token: $e');
     return null;
