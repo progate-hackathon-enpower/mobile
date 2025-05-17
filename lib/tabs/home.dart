@@ -48,9 +48,10 @@ class _tabsHomeState extends State<tabsHome>{
           titleTextStyle: const TextStyle(
             color: Color.fromARGB(255, 255, 255, 255), fontSize: 20
           ),
-          backgroundColor: const Color.fromARGB(255, 40, 40, 40),
+          backgroundColor: const Color.fromARGB(255, 30, 22, 80),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Color.fromARGB(255, 30, 22, 80),
           heroTag: "add_button",
           onPressed: (){
             showModalBottomSheet(
@@ -104,18 +105,34 @@ class _tabsHomeState extends State<tabsHome>{
             color: Color.fromARGB(200, 255, 255, 255),
           ),
         ),
-        body: FutureBuilder(
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/thumbnail.png'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(Color.fromARGB(200, 0, 0, 0), BlendMode.darken),
+              opacity: 0.5,
+            )
+          ),
+          child:FutureBuilder(
             future: getGitHubStats(),
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.done){
                 final data = jsonDecode(snapshot.data!) as List<dynamic>;
                 return data.length == 0 ? Center(child: Text("活動がありません")) : ListView.builder(
                   itemCount: data.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(data[index]['type'] ?? 'Unknown Event'),
-                    subtitle: Text('Repository: ${data[index]['repo']['name'] ?? 'Unknown'}'),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(data[index]['actor']['avatar_url']),
+                  itemBuilder: (context, index) => Container(
+                    margin: EdgeInsets.only(top:10,bottom:10,left:5,right:5),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(128, 46, 204, 64),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child:ListTile(
+                      title: Text(data[index]['type'] ?? 'Unknown Event',style:TextStyle(color:Colors.white)),
+                      subtitle: Text('Repository: ${data[index]['repo']['name'] ?? 'Unknown'}',style:TextStyle(color:Colors.white70)),
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(data[index]['actor']['avatar_url']),
+                      ),
                     ),
                   ),
                 );
@@ -125,7 +142,7 @@ class _tabsHomeState extends State<tabsHome>{
               );
             }
         )
-      ),
+      ),)
     );
   }
 }

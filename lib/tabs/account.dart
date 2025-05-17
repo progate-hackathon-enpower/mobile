@@ -51,9 +51,18 @@ class _tabsAccountState extends State<tabsAccount> {
             titleTextStyle: const TextStyle(
               color: Color.fromARGB(255, 255, 255, 255), fontSize: 20
             ),
-            backgroundColor: const Color.fromARGB(255, 40, 40, 40),
+            backgroundColor: const Color.fromARGB(255, 30, 22, 80),
           ),
-          body: FutureBuilder(
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/thumbnail.png'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(Color.fromARGB(200, 0, 0, 0), BlendMode.darken),
+                opacity: 0.5,
+              )
+            ),
+            child:FutureBuilder(
             future: getUser(session.user.userMetadata?["provider_id"]),
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.done){
@@ -77,6 +86,7 @@ class _tabsAccountState extends State<tabsAccount> {
                               style: const TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(200, 255, 255, 255),
                               )
                             ),
                           ]
@@ -154,7 +164,9 @@ class _tabsAccountState extends State<tabsAccount> {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            })
+            }
+          )
+        )
       ),
     );
   }
