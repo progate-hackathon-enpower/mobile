@@ -75,12 +75,7 @@ class _SwitchPageState extends State<SwitchPage> {
                     Text("GitHubアカウント「${user?.login}」と連携が完了しました。",style:TextStyle(color:Colors.white)),
                     ElevatedButton(
                       onPressed: (){
-                        MaterialPageRoute(
-                          settings: RouteSettings(
-                            name: '/',
-                          ),
-                          builder: (context) => PageViewTabsScreen()
-                        );
+                        Navigator.popUntil(context, (route) => route.isFirst);
                       }, 
                       child: Text("ホームに戻る")
                     )
