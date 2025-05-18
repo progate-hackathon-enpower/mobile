@@ -76,6 +76,7 @@ class _SwitchPageState extends State<SwitchPage> {
                     ElevatedButton(
                       onPressed: (){
                         Navigator.popUntil(context, (route) => route.isFirst);
+                        Navigator.pushNamed(context, '/');
                       }, 
                       child: Text("ホームに戻る")
                     )
