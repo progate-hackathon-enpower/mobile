@@ -74,9 +74,8 @@ class _SwitchPageState extends State<SwitchPage> {
                   children:[
                     Text("GitHubアカウント「${user?.login}」と連携が完了しました。",style:TextStyle(color:Colors.white)),
                     ElevatedButton(
-                      onPressed: (){
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                        Navigator.pushNamed(context, '/');
+                      onPressed: () async {
+                        await launchUrl(Uri.parse("https://mokuhub.vercel.app/"));
                       }, 
                       child: Text("ホームに戻る")
                     )
