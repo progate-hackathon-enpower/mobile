@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/tabs.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mobile/utils/github.dart';
 import 'package:mobile/utils/users.dart';
@@ -71,10 +72,15 @@ class _SwitchPageState extends State<SwitchPage> {
               setState((){
                 message=Column(
                   children:[
-                    Text("GitHubアカウント「${user?.name}」と連携が完了しました。",style:TextStyle(color:Colors.white)),
+                    Text("GitHubアカウント「${user?.login}」と連携が完了しました。",style:TextStyle(color:Colors.white)),
                     ElevatedButton(
                       onPressed: (){
-                        Navigator.pushReplacementNamed(context, '/');
+                        MaterialPageRoute(
+                          settings: RouteSettings(
+                            name: '/',
+                          ),
+                          builder: (context) => PageViewTabsScreen()
+                        );
                       }, 
                       child: Text("ホームに戻る")
                     )

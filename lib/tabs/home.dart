@@ -128,7 +128,7 @@ class _tabsHomeState extends State<tabsHome>{
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child:ListTile(
-                      title: Text(data[index]['type'] ?? 'Unknown Event',style:TextStyle(color:Colors.white)),
+                      title: Text(data[index]["type"] ?? 'Unknown Event',style:TextStyle(color:Colors.white)),
                       subtitle: Text('Repository: ${data[index]['repo']['name'] ?? 'Unknown'}',style:TextStyle(color:Colors.white70)),
                       leading: CircleAvatar(
                         backgroundImage: NetworkImage(data[index]['actor']['avatar_url']),

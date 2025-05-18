@@ -89,6 +89,21 @@ class _tabsAccountState extends State<tabsAccount> {
                                 color: Color.fromARGB(200, 255, 255, 255),
                               )
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children:[
+                                Image.asset("assets/images/png_logo.png", width: 25, height: 25),
+                                Text(
+                                  snapshot.data?["moku_point"].toString() ?? "取得中...",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(150, 255, 255, 255),
+                                  )
+                                ),
+                              ]
+                            ),
                           ]
                         )
                       ),
